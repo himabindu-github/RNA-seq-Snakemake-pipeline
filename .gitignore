@@ -1,0 +1,22 @@
+# Raw sequencing data
+*.fastq
+*.fastq.gz
+
+# Alignment files
+*.sam
+*.bam
+*.bai
+
+# QC outputs
+*_fastqc.zip
+*_fastqc.html
+
+# Results folder
+results/
+
+# Conda environments
+.env/
+.conda/
+
+# Mac system files
+.DS_Store

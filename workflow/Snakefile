@@ -1,0 +1,11 @@
+rule fastqc:
+    input:
+        "raw_reads/SRR1551058_1.fastq.gz",
+        "raw_reads/SRR1551058_2.fastq.gz"
+    output:
+        "results/SRR1551058_1_fastqc.html",
+        "results/SRR1551058_2_fastqc.html"
+    shell:
+        """
+        fastqc {input} -o results
+        """
