@@ -11,6 +11,10 @@
 *_fastqc.zip
 *_fastqc.html
 
+
+# Snakemake metadata
+.snakemake/
+
 # Results folder
 results/
 
