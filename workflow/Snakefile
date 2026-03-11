@@ -1,10 +1,17 @@
+SAMPLES = glob_wildcards("raw_reads/{sample}_1.fastq.gz").sample
+
+rule all:
+    input:
+        expand("results/{sample}_1_fastqc.html", sample=SAMPLES),
+        expand("results/{sample}_2_fastqc.html", sample=SAMPLES)
+        
 rule fastqc:
     input:
-        "raw_reads/SRR1551058_1.fastq.gz",
-        "raw_reads/SRR1551058_2.fastq.gz"
+        "raw_reads/{sample}_1.fastq.gz",
+        "raw_reads/{sample}_2.fastq.gz"
     output:
-        "results/SRR1551058_1_fastqc.html",
-        "results/SRR1551058_2_fastqc.html"
+        "results/{sample}_1_fastqc.html",
+        "results/{sample}_2_fastqc.html"
     shell:
         """
         fastqc {input} -o results
