@@ -3,8 +3,9 @@ SAMPLES = glob_wildcards("raw_reads/{sample}_1.fastq.gz").sample
 rule all:
     input:
         expand("results/{sample}_1_fastqc.html", sample=SAMPLES),
-        expand("results/{sample}_2_fastqc.html", sample=SAMPLES)
-        
+        expand("results/{sample}_2_fastqc.html", sample=SAMPLES),
+        expand("results/{sample}.bam", sample=SAMPLES)
+
 rule fastqc:
     input:
         "raw_reads/{sample}_1.fastq.gz",
@@ -15,4 +16,18 @@ rule fastqc:
     shell:
         """
         fastqc {input} -o results
+        """
+
+rule align:
+    input:
+        r1="raw_reads/{sample}_1.fastq.gz",
+        r2="raw_reads/{sample}_2.fastq.gz"
+    output:
+        "results/{sample}.bam"
+    shell:
+        """
+        hisat2 -x reference/chr22_index \
+        -1 {input.r1} \
+        -2 {input.r2} | \
+        samtools sort -o {output}
         """
