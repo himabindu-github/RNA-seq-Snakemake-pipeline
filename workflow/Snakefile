@@ -4,7 +4,8 @@ rule all:
     input:
         expand("results/{sample}_1_fastqc.html", sample=SAMPLES),
         expand("results/{sample}_2_fastqc.html", sample=SAMPLES),
-        expand("results/{sample}.bam", sample=SAMPLES)
+        expand("results/{sample}.bam", sample=SAMPLES),
+        expand("results/{sample}.bam.bai", sample=SAMPLES)
 
 rule fastqc:
     input:
@@ -30,4 +31,14 @@ rule align:
         -1 {input.r1} \
         -2 {input.r2} | \
         samtools sort -o {output}
+        """
+
+rule index_bam:
+    input:
+        "results/{sample}.bam"
+    output:
+        "results/{sample}.bam.bai"
+    shell:
+        """
+        samtools index {input}
         """
