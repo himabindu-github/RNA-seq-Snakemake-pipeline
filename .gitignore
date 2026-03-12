@@ -2,6 +2,10 @@
 *.fastq
 *.fastq.gz
 
+reference/
+results/
+.snakemake/
+
 # Alignment files
 *.sam
 *.bam

@@ -5,7 +5,8 @@ rule all:
         expand("results/{sample}_1_fastqc.html", sample=SAMPLES),
         expand("results/{sample}_2_fastqc.html", sample=SAMPLES),
         expand("results/{sample}.bam", sample=SAMPLES),
-        expand("results/{sample}.bam.bai", sample=SAMPLES)
+        expand("results/{sample}.bam.bai", sample=SAMPLES),
+        expand("results/counts/{sample}.txt", sample=SAMPLES)
 
 rule fastqc:
     input:
@@ -41,4 +42,20 @@ rule index_bam:
     shell:
         """
         samtools index {input}
+        """
+
+rule featurecounts:
+     input:
+        bam="results/{sample}.bam",
+        
+        gtf="reference/Homo_sapiens.GRCh38.110.gtf"                       
+
+     output:
+        "results/counts/{sample}.txt"
+     shell:
+        """
+        featureCounts -p -t exon -g gene_id \
+        -a {input.gtf} \
+        -o {output} \
+        {input.bam}
         """
