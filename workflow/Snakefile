@@ -6,7 +6,8 @@ rule all:
         expand("results/{sample}_2_fastqc.html", sample=SAMPLES),
         expand("results/{sample}.bam", sample=SAMPLES),
         expand("results/{sample}.bam.bai", sample=SAMPLES),
-        expand("results/counts/{sample}.txt", sample=SAMPLES)
+        
+        "results/counts_matrix.tsv"
 
 rule fastqc:
     input:
@@ -44,18 +45,21 @@ rule index_bam:
         samtools index {input}
         """
 
-rule featurecounts:
+rule featurecounts_matrix:
      input:
-        bam="results/{sample}.bam",
-        
-        gtf="reference/Homo_sapiens.GRCh38.110.gtf"                       
-
+        bam=expand("results/{sample}.bam", sample=SAMPLES),
+        bai=expand("results/{sample}.bam.bai", sample=SAMPLES),
+        gtf="reference/Homo_sapiens.GRCh38.110.gtf"
      output:
-        "results/counts/{sample}.txt"
+        "results/counts_matrix.tsv"
      shell:
         """
-        featureCounts -p -t exon -g gene_id \
-        -a {input.gtf} \
+        featureCounts \
+        -p \
+        -T 4 \
+        -t exon \
+        -g gene_id \
+        -a reference/Homo_sapiens.GRCh38.110.gtf \
         -o {output} \
         {input.bam}
         """
